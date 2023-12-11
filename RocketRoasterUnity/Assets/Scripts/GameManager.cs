@@ -10,15 +10,11 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        Application.targetFrameRate = 60;
     }
 
     public void HandlePlayerDestroyed()
     {
-        if (EnemyShipSpawner.Instance.currentWave > PlayerPrefs.GetInt("HighestWave"))
-        {
-            PlayerPrefs.SetInt("HighestWave", EnemyShipSpawner.Instance.currentWave);
-        }
-
         StartCoroutine(EndSessionCo());
     }
 

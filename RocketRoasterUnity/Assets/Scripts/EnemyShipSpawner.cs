@@ -4,23 +4,52 @@ using UnityEngine;
 
 public class EnemyShipSpawner : MonoBehaviour
 {
-    public static EnemyShipSpawner Instance;
+    [SerializeField] List<GameObject> _enemyPrefabs;
+    [SerializeField] float maxX;
+    [SerializeField] float ySpawnPos;
 
-    public Transform SpawnPoint;
+    [SerializeField] float _distanceBetweenSpawns;
 
-    [HideInInspector] public int startingNumberOfShips;
-    [HideInInspector] public int currentWave;
+    private float _prevY;
+    private float _currentY;
 
+    public Transform parent;
 
-    private void Awake()
+    void Start()
     {
-        Instance = this;
-        currentWave = 1;
+        _currentY = transform.position.y;
+        _prevY = _currentY;
     }
 
-  
-    void SpawnWaveOfShips()
+    void Update()
     {
+        _currentY = transform.position.y;
 
+        if (_currentY - _prevY >= _distanceBetweenSpawns)
+        {
+            SpawnEnemy();
+            _prevY = _currentY;
+        }
+    }
+
+    void SpawnEnemy()
+    {
+        int rand = Random.Range(0, 2);
+        Vector3 spawnPos;
+
+        if (rand == 0)
+        {
+            spawnPos = new Vector3(-maxX, transform.position.y, 0);
+            GameObject prefabToSpawn = _enemyPrefabs[Random.Range(0, _enemyPrefabs.Count)];
+            GameObject newEnemy = Instantiate(prefabToSpawn, spawnPos, transform.rotation, parent);
+            newEnemy.GetComponent<Enemy>().Init(1, 50);
+        }
+        else
+        {
+            spawnPos = new Vector3(maxX, transform.position.y, 0);
+            GameObject prefabToSpawn = _enemyPrefabs[Random.Range(0, _enemyPrefabs.Count)];
+            GameObject newEnemy = Instantiate(prefabToSpawn, spawnPos, transform.rotation, parent);
+            newEnemy.GetComponent<Enemy>().Init(-1, 50);
+        }
     }
 }
