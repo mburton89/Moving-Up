@@ -9,7 +9,7 @@ public class PlayerShip : MonoBehaviour
 {
     public static PlayerShip Instance;
 
-    public Rigidbody rigidBody;
+    public Rigidbody2D rb;
     public AudioSource hitSound;
     public ParticleSystem thrustParticles;
 
@@ -82,11 +82,11 @@ public class PlayerShip : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            rigidBody.AddForce(Vector3.left * acceleration / 2);
+            rb.AddForce(Vector3.left * acceleration / 2);
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            rigidBody.AddForce(Vector3.right * acceleration / 2);
+            rb.AddForce(Vector3.right * acceleration / 2);
         }
 
         if (transform.position.y < Camera.main.transform.position.y - distanceBelowCameraForDeath)
@@ -106,18 +106,18 @@ public class PlayerShip : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (rigidBody.velocity.x > maxXSpeed)
+        if (rb.velocity.x > maxXSpeed)
         {
-            rigidBody.velocity = new Vector3(maxXSpeed, rigidBody.velocity.y, 0);
+            rb.velocity = new Vector3(maxXSpeed, rb.velocity.y, 0);
         }
-        else if (rigidBody.velocity.x < -maxXSpeed)
+        else if (rb.velocity.x < -maxXSpeed)
         {
-            rigidBody.velocity = new Vector3(-maxXSpeed, rigidBody.velocity.y, 0);
+            rb.velocity = new Vector3(-maxXSpeed, rb.velocity.y, 0);
         }
 
-        if (rigidBody.velocity.y > maxYSpeed)
+        if (rb.velocity.y > maxYSpeed)
         {
-            rigidBody.velocity = new Vector3(rigidBody.velocity.x, maxYSpeed, 0);
+            rb.velocity = new Vector3(rb.velocity.x, maxYSpeed, 0);
         }
 
         //// Get the gyroscope data
@@ -148,7 +148,7 @@ public class PlayerShip : MonoBehaviour
 
     public void Thrust()
     {
-        rigidBody.AddForce(transform.up * acceleration); //Add force in the direction we're facing
+        rb.AddForce(transform.up * acceleration); //Add force in the direction we're facing
         currentSpeed = maxXSpeed; //Set our speed to our max speed
         float randomX = Random.Range(-0.1f, 0.1f);
         float randomY = Random.Range(-0.1f, 0.1f);

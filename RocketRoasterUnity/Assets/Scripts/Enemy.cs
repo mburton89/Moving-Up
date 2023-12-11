@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     private Color currentColor;
     public Color endColor;
 
-    public Rigidbody rb;
+    public Rigidbody2D rb;
 
     public GameObject comicTextPrefab;
 
@@ -37,8 +37,19 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<PlayerShip>())
+        {
+            collision.gameObject.GetComponent<PlayerShip>().Explode();
+            ExplodeWithNoMessage();
+        }
+    }
+
     private void OnParticleCollision(GameObject other)
     {
+        print("OnParticleCollision");
+
         currentColor = Color.Lerp(currentColor, endColor, colorChangeSpeed);
         objectRenderer.material.color = currentColor;
 
@@ -49,6 +60,7 @@ public class Enemy : MonoBehaviour
             Explode();
         }
     }
+
 
     public void Explode()
     {
